@@ -80,17 +80,17 @@ def f_lKeyExchange():
     ## 用法
         - ECDH_Key,MyKey,FriendKey = f_lKeyExchange()
     ## 返回值
-        - 32bytes的整数 256位
+        - 32bytes的整数 256位, 自己的公钥对象，对方的公钥对象
     ## 效果
-    [+] Connected to 192.168.43.143
-    [*] Friend Timestamp: 1608726043.14
+    [+] Connected to xx.xx.xx.xx
+    [*] Friend Timestamp: 16xxxxxxxx.14
     [+] P2P success
     [*] AES key: 07123f4f28e91bf32b0c1c07170c8ebf
     [*] Ciphertext(send): S7iUb3ANbK+COE85TnEp8PDeIdkUgayJ3Qhc8t5Pc30saMUosvntFESnPqPBuXYbETQ96rwlsWg6YUlMxwzYiex4HKrP9y3K5J1J8a8oSghJsCocjfu+KN1B7wJ1/6wWbbvi/N2yGaAMvhHIjSpONQDoTZDnUw3T8Rx+t5k4Ab154hOPPIetmSFdXdRrXOemuAQgxvXxkDhbrOPb1SQzV1+FmKdXKYQe2gRsPULvc14=
     [*] FIRST
     [*] recv: {"ciphertext": "7341v2Ln7G/Lgpx34ZpzCQOAKI/T4B7iK44fmsoJBcgabqYEOOC/bOokofNBKtgwbLqFdvgH5+vxLtO3ZOg4YcyyIS/Np71v7SR1SZjhJaN9abVesj+bEhbD6MChs7Sf7jzOHYh0jsFAd5NmpcoCNOobNSdp5gkMv480vd0CDsMRRAGqAMGphAI59HJgKTNtmYBwEJFc6FES1HzYeHzhu9aaIqMTHYcdSxKWFoWagfs=", "iv": "gscGhye5j+M7UjKMhgXoSQ=="}
     [*] Plaintext: DATA:82024428564084747779838197048651633248611312289409527370705229681692303606145;39729181007633170694355209291478423286094320004491905477069339670330824477025
-    [+] ECDSH key -> 72030276991425414947628627336807654469167727768166420584261307095702732572524
+    [+] ECDH key -> 72030276991425414947628627336807654469167727768166420584261307095702732572524
     '''
     global INIT_TIME_STAMP,clientSocket
     mykey = ECC.generate(curve=ECC_CURVE_TYPE)
@@ -229,7 +229,7 @@ def f_bSendMsg(key,pubkey):
         ciphertext = cipher.encrypt(pad(data.encode("utf-8"), AES.block_size))
         signer = DSS.new(pubkey, 'fips-186-3')
         hasher = SHA3_256.new(b64e(data.encode("utf-8"))) #Hash对象，对密文进行签名
-        sign_obj = signer.sign(hasher)    #用私钥对消息签名
+        sign_obj = signer.sign(hasher)   
 
         iv = b64e(iv)
         ct = b64e(ciphertext)
@@ -272,10 +272,10 @@ def f_vGetMsg(key,pubkey):
         timest=max(timest,ts)
 
         hasher = SHA3_256.new(b64e(pt)) # 对收到的消息文本提取摘要
-        verifer = DSS.new(pubkey, 'fips-186-3') # 使用公钥创建校验对象
+        verifer = DSS.new(pubkey, 'fips-186-3') 
 
         try:
-            verifer.verify(hasher, sg) # 校验摘要（本来的样子）和收到并解密的签名是否一致
+            verifer.verify(hasher, sg) # 校验sig
             #print("The signature is valid.")
         except (ValueError, TypeError):
             warn("The signature is not valid, and you are under attack")
