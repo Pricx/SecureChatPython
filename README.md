@@ -6,7 +6,7 @@ keywords：ECDH，ECDSA，DSS， interlock protocol，AES，SHA3-256，Timestamp
 
 关键技术：椭圆曲线DH密钥协商、椭圆曲线数字签名、连锁协议、AES-256、SHA3-256、时间戳、计数器、消息鉴别码
 
-简介：期末复习摸鱼写的。基于python的p2p安全通讯，保护机密性、真实性、完整性，抗重放、伪造、中间人（可能）。
+简介：。基于python的p2p安全通讯，保护机密性、真实性、完整性，抗重放、伪造、中间人（可能）。
 
 # REQUIREMENT
 
